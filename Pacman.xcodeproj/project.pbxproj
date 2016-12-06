@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3404E10D1DF7619E0036FFDD /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 3404E10C1DF7619E0036FFDD /* main.c */; };
 		3404E1151DF7647C0036FFDD /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3404E1141DF7647C0036FFDD /* SDL2.framework */; };
+		3404E1171DF770670036FFDD /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3404E1161DF770670036FFDD /* Lua.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,6 +28,7 @@
 		3404E1091DF7619E0036FFDD /* Pacman */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Pacman; sourceTree = BUILT_PRODUCTS_DIR; };
 		3404E10C1DF7619E0036FFDD /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		3404E1141DF7647C0036FFDD /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
+		3404E1161DF770670036FFDD /* Lua.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Lua.framework; path = ../../../../../../../Library/Frameworks/Lua.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3404E1171DF770670036FFDD /* Lua.framework in Frameworks */,
 				3404E1151DF7647C0036FFDD /* SDL2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -69,6 +72,7 @@
 		3404E1131DF7647C0036FFDD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3404E1161DF770670036FFDD /* Lua.framework */,
 				3404E1141DF7647C0036FFDD /* SDL2.framework */,
 			);
 			name = Frameworks;
