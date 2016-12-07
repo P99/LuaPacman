@@ -11,6 +11,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <Lua/lua.h>
 #include <Lua/lauxlib.h>
 #include <Lua/lualib.h>
@@ -32,6 +33,7 @@ typedef struct __context__ {
 context_t *load_lua_runtime();
 int lua_ext_draw_rectangle (lua_State *L);
 int lua_ext_get_key_input (lua_State *L);
+int lua_ext_usleep (lua_State *L);
 void error (lua_State *L, const char *fmt, ...);
 int lua_run(context_t * ctx);
 
@@ -87,6 +89,8 @@ context_t* load_lua_runtime()
     lua_setglobal(L, "drawRect");
     lua_pushcfunction(L, lua_ext_get_key_input);
     lua_setglobal(L, "getKey");
+    lua_pushcfunction(L, lua_ext_usleep);
+    lua_setglobal(L, "usleep");
 
     return ctx;
 }
@@ -135,6 +139,13 @@ int lua_ext_draw_rectangle (lua_State *L)
     SDL_UpdateWindowSurface( ctx->window );
     lua_pushboolean(L, 1);
     return 1;  /* number of results */
+}
+
+int lua_ext_usleep (lua_State *L)
+{
+    double d = luaL_checknumber(L, 1);
+    usleep(d);
+    return 0;
 }
 
 int lua_ext_get_key_input (lua_State *L)

@@ -34,11 +34,9 @@ end
 --drawRect{top=45, left=24, width=3, height=75}
 
 function Game:eventHandler()
-  while true do
-    local events = getKey()
-    if events ~= nil then
-      print("Event: " .. events)
-    end
+  local events = getKey()
+  if events ~= nil then
+    print("Event: " .. events)
   end
 end
 
@@ -49,12 +47,19 @@ function Game:draw()
   end
 end
 
+function Game:run()
+  while true do
+    self:eventHandler()
+    self:draw()
+    usleep(200)
+  end
+end
+
 -- Constructor
 function Game:init()
   print("Pacman game in Lua")
-  Game:loadMap("map.txt")
-  Game:draw()
-  Game:eventHandler()
+  self:loadMap("map.txt")
+  self:run()
 end
 
 -- Launch the game

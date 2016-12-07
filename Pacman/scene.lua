@@ -3,7 +3,7 @@ local Cell = require ("cell")
 local CELL_SIZE_PIXELS = 20
 
 local Scene = {
-cells = {{}}
+  cells = {{}}
 }
 
 function Scene:init()
