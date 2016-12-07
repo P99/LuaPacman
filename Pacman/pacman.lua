@@ -8,10 +8,11 @@ Game = {
 
 -- Load map file and draw the whole thing
 function Game:loadMap(filename)
-  local actions = {
+  local cellTypes = {
     ["#"] = "wall",
     ["@"] = "coin",
     [" "] = "empty",
+    ["x"] = "pacman"
   }
   local x, y = 1, 1
   local f = assert(io.open(filename, "r"))
@@ -20,8 +21,13 @@ function Game:loadMap(filename)
     if line == nil then break end
     for x = 1, #line do
       local type = line:sub(x, x)
-      if actions[type] ~= nill then
-        self.scene:addCell(actions[type], x, y)
+      type = cellTypes[type]
+      if type ~= nill then
+        if type == "pacman" then
+          self.scene:addCharacter(type, x, y)
+        else
+          self.scene:addCell(type, x, y)
+        end
       end
     end
     y = y + 1
@@ -29,20 +35,17 @@ function Game:loadMap(filename)
   f:close()
 end
 
---drawRect{top=5, left=24, width=53, height=79}
---drawRect{top=15, left=54, width=5, height=79}
---drawRect{top=45, left=24, width=3, height=75}
-
 function Game:eventHandler()
-  local events = getKey()
-  if events ~= nil then
-    print("Event: " .. events)
+  local event = getKey()
+  if event ~= nil then
+    --print("Event: " .. event)
+    self.scene:eventHandler(event)
   end
 end
 
 function Game:draw()
   if self.scene then
-    print("Repainting area")
+    --print("Repainting area")
     self.scene:draw()
   end
 end

@@ -17,13 +17,14 @@ end
 function Cell:draw()
   local cellsColors = {
     wall = "grey",
-    coin = "yellow",
+    coin = "green",
     empty = "black",
   }
   if self.dirty then
     --print("Drawing " .. self.type .. " in " .. cellsColors[self.type])
     self.rect.color = cellsColors[self.type];
     drawRect(self.rect)
+    self.dirty = false
   end
 end
 

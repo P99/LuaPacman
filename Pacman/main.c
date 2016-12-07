@@ -129,6 +129,10 @@ int lua_ext_draw_rectangle (lua_State *L)
         color = SDL_MapRGB( ctx->screenSurface->format, 0x5F, 0x5F, 0x5F );
     } else if (!strcmp(str, "yellow")) {
         color= SDL_MapRGB( ctx->screenSurface->format, 0xFF, 0xD7, 0x00 );
+    } else if (!strcmp(str, "red")) {
+        color= SDL_MapRGB( ctx->screenSurface->format, 0x7F, 0x0F, 0x0F );
+    } else if (!strcmp(str, "green")) {
+        color= SDL_MapRGB( ctx->screenSurface->format, 0x0F, 0x7F, 0x0F );
     } else {
         color = SDL_MapRGB( ctx->screenSurface->format, 0x00, 0x00, 0x00 );
     }

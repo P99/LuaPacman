@@ -32,6 +32,7 @@
 		3404E1181DF77E040036FFDD /* pacman.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = pacman.lua; sourceTree = "<group>"; };
 		340F0FB11DF7B6200046A72F /* scene.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scene.lua; sourceTree = "<group>"; };
 		340F0FB31DF7BA320046A72F /* cell.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cell.lua; sourceTree = "<group>"; };
+		340F0FB41DF7D3590046A72F /* character.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = character.lua; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +68,7 @@
 		3404E10B1DF7619E0036FFDD /* Pacman */ = {
 			isa = PBXGroup;
 			children = (
+				340F0FB41DF7D3590046A72F /* character.lua */,
 				340F0FB31DF7BA320046A72F /* cell.lua */,
 				340F0FB11DF7B6200046A72F /* scene.lua */,
 				3404E1181DF77E040036FFDD /* pacman.lua */,
