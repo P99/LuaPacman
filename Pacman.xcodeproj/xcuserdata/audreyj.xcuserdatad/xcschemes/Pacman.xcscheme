@@ -62,6 +62,13 @@
             ReferencedContainer = "container:Pacman.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "LUA_PATH"
+            value = "$(PROJECT_DIR)/$(PROJECT_NAME)/?.lua"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
