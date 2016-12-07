@@ -1,6 +1,6 @@
 
 local Cell = require ("cell")
-local CELL_SIZE_PIXELS = 50
+local CELL_SIZE_PIXELS = 20
 
 local Scene = {
 cells = {{}}
@@ -26,6 +26,14 @@ function Scene:addCell(type, x, y)
   cell:setRect(rect)
   if self.cells[x] == nil then self.cells[x] = {} end
   self.cells[x][y] = cell
+end
+
+function Scene:draw()
+  for i = 1, #self.cells do
+    for j = 1, #self.cells[i] do
+      self.cells[i][j]:draw()
+    end
+  end
 end
 
 return Scene

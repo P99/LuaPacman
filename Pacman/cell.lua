@@ -6,6 +6,7 @@ function Cell:init(type)
   setmetatable(o, self)
   self.__index = self
   o.type = type
+  o.dirty = true
   return o
 end
 
@@ -19,8 +20,11 @@ function Cell:draw()
     coin = "yellow",
     empty = "black",
   }
-  print("Drawing " .. self.type .. " in " .. cellsColors[self.type])
-  drawRect(rect, cellsColors[self.type])
+  if self.dirty then
+    --print("Drawing " .. self.type .. " in " .. cellsColors[self.type])
+    self.rect.color = cellsColors[self.type];
+    drawRect(self.rect)
+  end
 end
 
 return Cell;

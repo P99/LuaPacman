@@ -42,10 +42,18 @@ function Game:eventHandler()
   end
 end
 
+function Game:draw()
+  if self.scene then
+    print("Repainting area")
+    self.scene:draw()
+  end
+end
+
 -- Constructor
 function Game:init()
   print("Pacman game in Lua")
   Game:loadMap("map.txt")
+  Game:draw()
   Game:eventHandler()
 end
 

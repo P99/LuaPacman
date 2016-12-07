@@ -104,6 +104,8 @@ int lua_run(context_t * ctx)
 int lua_ext_draw_rectangle (lua_State *L)
 {
     context_t *ctx = NULL;
+    const char *str;
+    uint32_t color;
     lua_getglobal(L, "ctx");
     ctx = (context_t*)lua_touserdata(L, -1);
 
@@ -111,15 +113,25 @@ int lua_ext_draw_rectangle (lua_State *L)
     lua_getfield(L, 1, "top");
     lua_getfield(L, 1, "width");
     lua_getfield(L, 1, "height");
+    lua_getfield(L, 1, "color");
 
-    ctx->rect.x = lua_tonumber(L, -1);
-    ctx->rect.y = lua_tonumber(L, -2);
+    ctx->rect.x = lua_tonumber(L, -5);
+    ctx->rect.y = lua_tonumber(L, -4);
     ctx->rect.w = lua_tonumber(L, -3);
-    ctx->rect.h = lua_tonumber(L, -4);
+    ctx->rect.h = lua_tonumber(L, -2);
+    str = lua_tostring(L, -1);
+    
+    if (!strcmp(str, "grey")) {
+        color = SDL_MapRGB( ctx->screenSurface->format, 0x5F, 0x5F, 0x5F );
+    } else if (!strcmp(str, "yellow")) {
+        color= SDL_MapRGB( ctx->screenSurface->format, 0xFF, 0xD7, 0x00 );
+    } else {
+        color = SDL_MapRGB( ctx->screenSurface->format, 0x00, 0x00, 0x00 );
+    }
 
-    printf("drawRect x=%d, y=%d, w=%d, h=%d\n", ctx->rect.x, ctx->rect.y, ctx->rect.w, ctx->rect.h);
+    //printf("drawRect x=%d, y=%d, w=%d, h=%d\n", ctx->rect.x, ctx->rect.y, ctx->rect.w, ctx->rect.h);
 
-    SDL_FillRect( ctx->screenSurface, &ctx->rect, SDL_MapRGB( ctx->screenSurface->format, 0xFF, 0xFF, 0xFF ) );
+    SDL_FillRect( ctx->screenSurface, &ctx->rect, color);
     SDL_UpdateWindowSurface( ctx->window );
     lua_pushboolean(L, 1);
     return 1;  /* number of results */
