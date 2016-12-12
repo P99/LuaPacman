@@ -108,6 +108,8 @@ context_t* load_lua_runtime()
     lua_setglobal(L, "ctx");
     lua_pushcfunction(L, lua_ext_draw_rectangle);
     lua_setglobal(L, "drawRect");
+    lua_pushcfunction(L, lua_ext_draw_sprite);
+    lua_setglobal(L, "drawSprite");
     lua_pushcfunction(L, lua_ext_refresh_screen);
     lua_setglobal(L, "refreshScreen");
     lua_pushcfunction(L, lua_ext_get_key_input);
@@ -189,34 +191,30 @@ int lua_ext_draw_sprite (lua_State *L)
     ctx = (context_t*)lua_touserdata(L, -1);
 
     // Src rect
-    lua_gettable(L, 1);
-    lua_getfield(L, 1, "left");
-    lua_getfield(L, 1, "top");
-    lua_getfield(L, 1, "width");
-    lua_getfield(L, 1, "height");
+    lua_getfield(L, 1, "src_left");
+    lua_getfield(L, 1, "src_top");
+    lua_getfield(L, 1, "src_width");
+    lua_getfield(L, 1, "src_height");
 
     // Dest rect
-    lua_gettable(L, 1);
-    lua_getfield(L, 1, "left");
-    lua_getfield(L, 1, "top");
-    lua_getfield(L, 1, "width");
-    lua_getfield(L, 1, "height");
+    lua_getfield(L, 1, "dst_left");
+    lua_getfield(L, 1, "dst_top");
+    lua_getfield(L, 1, "dst_width");
+    lua_getfield(L, 1, "dst_height");
 
     ctx->src.x = lua_tonumber(L, -8);
     ctx->src.y = lua_tonumber(L, -7);
     ctx->src.w = lua_tonumber(L, -6);
     ctx->src.h = lua_tonumber(L, -5);
-
     ctx->dst.x = lua_tonumber(L, -4);
     ctx->dst.y = lua_tonumber(L, -3);
     ctx->dst.w = lua_tonumber(L, -2);
     ctx->dst.h = lua_tonumber(L, -1);
 
-    printf("src Rect x=%d, y=%d, w=%d, h=%d\n", ctx->src.x, ctx->src.y, ctx->src.w, ctx->src.h);
-    printf("dst Rect x=%d, y=%d, w=%d, h=%d\n", ctx->dst.x, ctx->dst.y, ctx->dst.w, ctx->dst.h);
+    //printf("src Rect x=%d, y=%d, w=%d, h=%d\n", ctx->src.x, ctx->src.y, ctx->src.w, ctx->src.h);
+    //printf("dst Rect x=%d, y=%d, w=%d, h=%d\n", ctx->dst.x, ctx->dst.y, ctx->dst.w, ctx->dst.h);
 
-    SDL_RenderCopy(ctx->renderer, ctx->texture, NULL, NULL);
-    SDL_RenderPresent(ctx->renderer);
+    SDL_RenderCopy(ctx->renderer, ctx->texture, &ctx->src, &ctx->dst);
 
     lua_pushboolean(L, 1);
     return 1;  /* number of results */

@@ -23,7 +23,17 @@ function Character:setRect(rect)
 end
 
 function Character:draw()
-  drawRect(self.rect)
+  sprite = {
+    src_top = 0,
+    src_left = 0,
+    src_width = 22,
+    src_height = 22,
+    dst_top = self.rect.top,
+    dst_left = self.rect.left,
+    dst_width = self.rect.width,
+    dst_height = self.rect.height
+  }
+  drawSprite(sprite)
 end
 
 return Character;
