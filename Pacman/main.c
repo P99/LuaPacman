@@ -245,7 +245,10 @@ int lua_ext_get_key_input (lua_State *L)
                 count ++;
                 lua_pushstring(L, key);
                 break;
-                
+            case SDL_QUIT:
+                key = "Quit";
+                count ++;
+                lua_pushstring(L, key);
             default:
                 break;
         }

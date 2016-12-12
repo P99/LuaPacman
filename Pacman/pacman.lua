@@ -37,10 +37,16 @@ end
 
 function Game:eventHandler()
   local event = getKey()
+  local running = true
   if event ~= nil then
     --print("Event: " .. event)
-    self.scene:eventHandler(event)
+    if event == "Quit" then
+      running = false
+    else
+      self.scene:eventHandler(event)
+    end
   end
+  return running
 end
 
 function Game:draw()
@@ -51,8 +57,9 @@ function Game:draw()
 end
 
 function Game:run()
-  while true do
-    self:eventHandler()
+  local running = true
+  while running do
+    running = self:eventHandler()
     self:draw()
     usleep(50000)
   end
