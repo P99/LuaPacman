@@ -93,7 +93,6 @@ function Scene:eventHandler(event)
       height = CELL_SIZE_PIXELS,
       color = "yellow",
     }
-  self:draw()
   end
 end
 
@@ -109,6 +108,8 @@ function Scene:draw()
   for i = 1, #self.characters do
     self.characters[i]:draw()
   end
+
+  refreshScreen();
 end
 
 return Scene

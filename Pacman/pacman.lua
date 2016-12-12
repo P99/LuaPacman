@@ -54,7 +54,7 @@ function Game:run()
   while true do
     self:eventHandler()
     self:draw()
-    usleep(200)
+    usleep(50000)
   end
 end
 

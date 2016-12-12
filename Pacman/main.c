@@ -7,6 +7,7 @@
 //
 
 #include <SDL2/SDL.h>
+#include <SDL2_image/SDL_image.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -21,9 +22,12 @@ const int SCREEN_HEIGHT = 480;
 
 typedef struct __context__ {
     /* SDL related objects */
-    SDL_Window* window;
-    SDL_Surface* screenSurface;
+    SDL_Window *window;
+    SDL_Renderer *renderer;
+    SDL_Texture *texture;
     SDL_Rect rect;
+    SDL_Rect src;
+    SDL_Rect dst;
 
     /* Lua contexts */
     lua_State *L;
@@ -32,10 +36,12 @@ typedef struct __context__ {
 
 context_t *load_lua_runtime();
 int lua_ext_draw_rectangle (lua_State *L);
+int lua_ext_draw_sprite (lua_State *L);
+int lua_ext_refresh_screen (lua_State *L);
 int lua_ext_get_key_input (lua_State *L);
 int lua_ext_usleep (lua_State *L);
 void error (lua_State *L, const char *fmt, ...);
-int lua_run(context_t * ctx);
+int lua_run(context_t *ctx);
 
 int main( int argc, char* args[] )
 {
@@ -54,10 +60,25 @@ int main( int argc, char* args[] )
         }
         else
         {
-            ctx->screenSurface = SDL_GetWindowSurface( ctx->window );
+            ctx->renderer = SDL_CreateRenderer(ctx->window, -1, SDL_RENDERER_ACCELERATED);
+            if (ctx->renderer == NULL) {
+                printf("SDL_CreateRenderer failed: %s\n", SDL_GetError());
+            }
 
-            SDL_FillRect( ctx->screenSurface, NULL, SDL_MapRGB( ctx->screenSurface->format, 0x00, 0x00, 0x00 ) );
-            SDL_UpdateWindowSurface( ctx->window );
+            //Initialize PNG loading
+            int imgFlags = IMG_INIT_PNG;
+            if( !( IMG_Init( imgFlags ) & imgFlags ) )
+            {
+                printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+            }
+            SDL_Surface *surface = IMG_Load("original_spritesheet.png");
+            printf("Sprites surface: %p\n", surface);
+            ctx->texture = SDL_CreateTextureFromSurface(ctx->renderer, surface);
+            if (ctx->texture == NULL) {
+                printf("CreateTextureFromSurface failed: %s\n", SDL_GetError());
+            }
+            SDL_FreeSurface(surface);
+            printf("Sprites texture: %p\n", ctx->texture);
 
             lua_run(ctx);
             SDL_Delay(2000);
@@ -87,6 +108,8 @@ context_t* load_lua_runtime()
     lua_setglobal(L, "ctx");
     lua_pushcfunction(L, lua_ext_draw_rectangle);
     lua_setglobal(L, "drawRect");
+    lua_pushcfunction(L, lua_ext_refresh_screen);
+    lua_setglobal(L, "refreshScreen");
     lua_pushcfunction(L, lua_ext_get_key_input);
     lua_setglobal(L, "getKey");
     lua_pushcfunction(L, lua_ext_usleep);
@@ -109,7 +132,6 @@ int lua_ext_draw_rectangle (lua_State *L)
 {
     context_t *ctx = NULL;
     const char *str;
-    uint32_t color;
     lua_getglobal(L, "ctx");
     ctx = (context_t*)lua_touserdata(L, -1);
 
@@ -125,22 +147,77 @@ int lua_ext_draw_rectangle (lua_State *L)
     ctx->rect.h = lua_tonumber(L, -2);
     str = lua_tostring(L, -1);
     
-    if (!strcmp(str, "grey")) {
-        color = SDL_MapRGB( ctx->screenSurface->format, 0x5F, 0x5F, 0x5F );
-    } else if (!strcmp(str, "yellow")) {
-        color= SDL_MapRGB( ctx->screenSurface->format, 0xFF, 0xD7, 0x00 );
-    } else if (!strcmp(str, "red")) {
-        color= SDL_MapRGB( ctx->screenSurface->format, 0x7F, 0x0F, 0x0F );
-    } else if (!strcmp(str, "green")) {
-        color= SDL_MapRGB( ctx->screenSurface->format, 0x0F, 0x7F, 0x0F );
-    } else {
-        color = SDL_MapRGB( ctx->screenSurface->format, 0x00, 0x00, 0x00 );
-    }
-
     //printf("drawRect x=%d, y=%d, w=%d, h=%d\n", ctx->rect.x, ctx->rect.y, ctx->rect.w, ctx->rect.h);
 
-    SDL_FillRect( ctx->screenSurface, &ctx->rect, color);
-    SDL_UpdateWindowSurface( ctx->window );
+    if (!strcmp(str, "grey")) {
+        //color = SDL_MapRGB( ctx->screenSurface->format, 0x5F, 0x5F, 0x5F );
+        SDL_SetRenderDrawColor(ctx->renderer, 0x5F, 0x5F, 0x5F, 0xFF);
+    } else if (!strcmp(str, "yellow")) {
+        //color= SDL_MapRGB( ctx->screenSurface->format, 0xFF, 0xD7, 0x00 );
+        SDL_SetRenderDrawColor(ctx->renderer, 0xFF, 0xD7, 0x00, 0xFF);
+    } else if (!strcmp(str, "red")) {
+        //color= SDL_MapRGB( ctx->screenSurface->format, 0x7F, 0x0F, 0x0F );
+        SDL_SetRenderDrawColor(ctx->renderer, 0x7F, 0x0F, 0x0F, 0xFF);
+    } else if (!strcmp(str, "green")) {
+        //color= SDL_MapRGB( ctx->screenSurface->format, 0x0F, 0x7F, 0x0F );
+        SDL_SetRenderDrawColor(ctx->renderer, 0x0F, 0x7F, 0x0F, 0xFF);
+    } else {
+        //color = SDL_MapRGB( ctx->screenSurface->format, 0x00, 0x00, 0x00 );
+        SDL_SetRenderDrawColor(ctx->renderer, 0x00, 0x00, 0x00, 0xFF);
+    }
+
+    SDL_RenderFillRect(ctx->renderer, &ctx->rect);
+
+    lua_pushboolean(L, 1);
+    return 1;  /* number of results */
+}
+
+int lua_ext_refresh_screen (lua_State *L)
+{
+    context_t *ctx = NULL;
+    lua_getglobal(L, "ctx");
+    ctx = (context_t*)lua_touserdata(L, -1);
+    SDL_RenderPresent(ctx->renderer);
+    lua_pushboolean(L, 1);
+    return 1;  /* number of results */
+}
+
+int lua_ext_draw_sprite (lua_State *L)
+{
+    context_t *ctx = NULL;
+    lua_getglobal(L, "ctx");
+    ctx = (context_t*)lua_touserdata(L, -1);
+
+    // Src rect
+    lua_gettable(L, 1);
+    lua_getfield(L, 1, "left");
+    lua_getfield(L, 1, "top");
+    lua_getfield(L, 1, "width");
+    lua_getfield(L, 1, "height");
+
+    // Dest rect
+    lua_gettable(L, 1);
+    lua_getfield(L, 1, "left");
+    lua_getfield(L, 1, "top");
+    lua_getfield(L, 1, "width");
+    lua_getfield(L, 1, "height");
+
+    ctx->src.x = lua_tonumber(L, -8);
+    ctx->src.y = lua_tonumber(L, -7);
+    ctx->src.w = lua_tonumber(L, -6);
+    ctx->src.h = lua_tonumber(L, -5);
+
+    ctx->dst.x = lua_tonumber(L, -4);
+    ctx->dst.y = lua_tonumber(L, -3);
+    ctx->dst.w = lua_tonumber(L, -2);
+    ctx->dst.h = lua_tonumber(L, -1);
+
+    printf("src Rect x=%d, y=%d, w=%d, h=%d\n", ctx->src.x, ctx->src.y, ctx->src.w, ctx->src.h);
+    printf("dst Rect x=%d, y=%d, w=%d, h=%d\n", ctx->dst.x, ctx->dst.y, ctx->dst.w, ctx->dst.h);
+
+    SDL_RenderCopy(ctx->renderer, ctx->texture, NULL, NULL);
+    SDL_RenderPresent(ctx->renderer);
+
     lua_pushboolean(L, 1);
     return 1;  /* number of results */
 }
@@ -165,7 +242,6 @@ int lua_ext_get_key_input (lua_State *L)
         /* We are only worried about SDL_KEYDOWN and SDL_KEYUP events */
         switch( event.type ){
             case SDL_KEYDOWN:
-            case SDL_KEYUP:
                 key = SDL_GetKeyName(event.key.keysym.sym);
                 //printf("Key: %s\n", key);
                 count ++;

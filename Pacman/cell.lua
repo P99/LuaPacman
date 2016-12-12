@@ -24,7 +24,7 @@ function Cell:draw()
     --print("Drawing " .. self.type .. " in " .. cellsColors[self.type])
     self.rect.color = cellsColors[self.type];
     drawRect(self.rect)
-    self.dirty = false
+    --self.dirty = false
   end
 end
 

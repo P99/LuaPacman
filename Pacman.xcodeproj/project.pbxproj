@@ -10,6 +10,7 @@
 		3404E10D1DF7619E0036FFDD /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 3404E10C1DF7619E0036FFDD /* main.c */; };
 		3404E1151DF7647C0036FFDD /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3404E1141DF7647C0036FFDD /* SDL2.framework */; };
 		3404E1171DF770670036FFDD /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3404E1161DF770670036FFDD /* Lua.framework */; };
+		340F0FB81DF944CC0046A72F /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 340F0FB71DF944CC0046A72F /* SDL2_image.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +34,8 @@
 		340F0FB11DF7B6200046A72F /* scene.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scene.lua; sourceTree = "<group>"; };
 		340F0FB31DF7BA320046A72F /* cell.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cell.lua; sourceTree = "<group>"; };
 		340F0FB41DF7D3590046A72F /* character.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = character.lua; sourceTree = "<group>"; };
+		340F0FB51DF944AF0046A72F /* Frameworks */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Frameworks; path = ../../../../../../../Library/Frameworks; sourceTree = "<group>"; };
+		340F0FB71DF944CC0046A72F /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../../../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +45,7 @@
 			files = (
 				3404E1171DF770670036FFDD /* Lua.framework in Frameworks */,
 				3404E1151DF7647C0036FFDD /* SDL2.framework in Frameworks */,
+				340F0FB81DF944CC0046A72F /* SDL2_image.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +84,8 @@
 		3404E1131DF7647C0036FFDD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				340F0FB71DF944CC0046A72F /* SDL2_image.framework */,
+				340F0FB51DF944AF0046A72F /* Frameworks */,
 				3404E1161DF770670036FFDD /* Lua.framework */,
 				3404E1141DF7647C0036FFDD /* SDL2.framework */,
 			);
