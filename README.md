@@ -25,3 +25,4 @@ The pacman game is using several objects
 - Scene: Contains a list of cells and a list of characters (for now only pacman)
 - Cell: Is a basic type handling the painting of background items
 - Character: Handle the painting of overlay elements (e.g. pacman)
+
